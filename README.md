@@ -8,9 +8,9 @@ The Keystore stores all data in a DynamoDB table, indexed on the key's name. All
 
 ## tests
 
-You have rspec, cucumber, and rubocop installed right?
+You have rspec, cucumber, and rubocop installed right? Also the nyan-cat rspec formatter because we are all very serious no-nonense programmer types here.
 
-    gem install rspec cucumber rubocop
+    gem install rspec cucumber rubocop nyan-cat-formatter
   
 Okay, now from the the root of the repo you can do these things.
 
