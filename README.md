@@ -1,4 +1,4 @@
-# keystore
+# keystore :key:
 
 While building applications and continuous delivery pipelines, secret management is usually one of the first non-trivial problems you run across. The Keystore utility pairs to AWS services to handle encryption and storage of secret data.
 
