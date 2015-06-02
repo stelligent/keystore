@@ -6,6 +6,34 @@ The Keystore stores all data in a DynamoDB table, indexed on the key's name. All
 
 # usage
 
+## tests
+
+You have rspec, cucumber, and rubocop installed right?
+
+    gem install rspec cucumber rubocop
+  
+Okay, now from the the root of the repo you can do these things.
+
+* To run the unit tests:
+
+        rspec 
+
+* To run static analysis:
+
+        rubocop
+
+* To run the integration tests, you'll need to set up a KMS Key manually and write down the key_id. Then, you'll need to set up a DynamoDB, but you can use the included cfn template for that.
+
+        export AWS_ACCESS_KEY_ID=YOURACCESSKEY
+        export AWS_SECRET_ACCESS_KEY=YOURSECRETKEY
+        aws cloudformation create-stack --stack-name keystore-test-db --template-body file://config/dynamo.json
+        echo "This takes a minute, so go get yourself a coffee." && sleep 60
+        export table_name=`aws cloudformation describe-stacks --stack-name jonny-test-ddb --query Stacks[*].Outputs[*].OutputValue --output text`
+        
+* Then to run the integration tests
+
+        cucumber region="us-east-1" table_name="$table_name" key_id="your-iam-kms-key-id" 
+
 ## api
 
   ```keystore = Keystore.new dynamo: dynamodb_client, table_name: table_name
