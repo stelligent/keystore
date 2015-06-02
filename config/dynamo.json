@@ -1,0 +1,35 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Creates a DynamoDB table to be used a data store for the Stelligent Keystore utility.",
+    "Resources": {
+        "keystore": {
+            "Type": "AWS::DynamoDB::Table",
+            "Properties": {
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "ParameterName",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "ParameterName",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 5,
+                    "WriteCapacityUnits": 5
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "TableName": {
+            "Value": {
+                "Ref": "keystore"
+            },
+            "Description": "The name of the Keystore DynamoDB table."
+        }
+    }
+}
