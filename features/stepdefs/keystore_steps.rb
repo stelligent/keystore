@@ -11,6 +11,11 @@ Given(/^a region to operate in$/) do
   fail if @region.nil?
 end
 
+Given(/^a KMS key id to use$/) do
+  @key_id = ENV['key_id']
+  fail if @key_id.nil?
+end
+
 Given(/^a DynamoDB table to use$/) do
   @table_name = ENV['table_name']
   fail if @table_name.nil?
@@ -19,7 +24,7 @@ end
 When(/^I store a value in the keystore$/) do
   @dynamo = Aws::DynamoDB::Client.new region: @region
   @kms = Aws::KMS::Client.new region: @region
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms
+  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id
   keystore.store key: @key, value: @value
 end
 
@@ -33,7 +38,7 @@ end
 When(/^I retrieve a value from the keystore$/) do
   @dynamo = Aws::DynamoDB::Client.new region: @region
   @kms = Aws::KMS::Client.new region: @region
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms
+  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id
   keystore.store key: @key, value: @value
   @result = keystore.retrieve key: @key
   expect(@result).to be

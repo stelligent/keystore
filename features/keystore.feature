@@ -5,6 +5,7 @@ Feature: Storing encrypted values
     Background:
         Given a region to operate in
         And a DynamoDB table to use
+        And a KMS key id to use
         And test data to use
 
     Scenario: Store encrypted values
