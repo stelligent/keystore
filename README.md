@@ -28,7 +28,7 @@ Okay, now from the the root of the repo you can do these things.
         export AWS_SECRET_ACCESS_KEY=YOURSECRETKEY
         aws cloudformation create-stack --stack-name keystore-test-db --template-body file://config/dynamo.json
         echo "This takes a minute, so go get yourself a coffee." && sleep 60
-        export table_name=`aws cloudformation describe-stacks --stack-name jonny-test-ddb --query Stacks[*].Outputs[*].OutputValue --output text`
+        export table_name=`aws cloudformation describe-stacks --stack-name keystore-test-db --query Stacks[*].Outputs[*].OutputValue --output text`
         
 * Then to run the integration tests
 
