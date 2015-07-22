@@ -18,8 +18,8 @@ Feature: Storing encrypted values
 
     Scenario: Store using command line interface
         When I store a value using the command line interface
-        Then I should see that encrypted data in the raw data store
+        Then I should see that encrypted data from the CLI in the raw data store
 
-    Scenario: Retreieve encrypted values
+    Scenario: Retrieve encrypted values
         When I retrieve a value using the command line interface
-        Then I should get that data back in plaintext
+        Then I should get that CLI entered data back in plaintext
