@@ -23,12 +23,12 @@ cmd_opts =
     Trollop.options do
       opt :value, 'the value to be inserted into the keystore (required for store)', required: true, type: String
       opt :kmsid, 'the kms key id to use to encrypt the data (required for store)', required: true, type: String
-      opt :key, 'the name of the key associated with the value', required: true, type: String
+      opt :keyname, 'the name of the key associated with the value', required: true, type: String
       opt :table, 'the name of the table to perform the lookup on', required: true, type: String
     end
   when 'retrieve'
     Trollop.options do
-      opt :key, 'the name of the key associated with the value', required: true, type: String
+      opt :keyname, 'the name of the key associated with the value', required: true, type: String
       opt :table, 'the name of the table to perform the lookup on', required: true, type: String
     end
   else
@@ -37,17 +37,14 @@ cmd_opts =
 
 dynamo = Aws::DynamoDB::Client.new region: global_opts[:region]
 kms = Aws::KMS::Client.new region: global_opts[:region]
-keystore = Keystore.new dynamo: dynamo, table_name: cmd_opts[:table], kms: kms, key_id: cmd_opts[:key]
+keystore = Keystore.new dynamo: dynamo, table_name: cmd_opts[:table], kms: kms, key_id: cmd_opts[:kmsid]
 
-case cmd 
+case cmd
 when 'store'
-  puts "storing #{dynamo} #{cmd_opts[:table]}, #{kms}, #{cmd_opts[:key]}, #{cmd_opts[:value]}"
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id
-  keystore.store key: @key, value: @value
+  keystore.store key: cmd_opts[:keyname], value: cmd_opts[:value]
 when 'retrieve'
-  puts "retrieving #{dynamo} #{cmd_opts[:table]}, #{cmd_opts[:key]}"
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms
-  @result = keystore.retrieve key: @key
+  result = keystore.retrieve key: cmd_opts[:keyname]
+  puts result
 else
-  raise "unknown subcommand #{cmd}"
+  fail "unknown subcommand #{cmd}"
 end
