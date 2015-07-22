@@ -49,3 +49,15 @@ Then(/^I should get that data back in plaintext$/) do
   @result = keystore.retrieve key: @key
   expect(@result).to eq @value
 end
+
+When(/^I store a value using the command line interface$/) do
+  # drop to shell to call command line
+  # keystore store --table --kms-id --key --value
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+When(/^I retrieve a value using the command line interface$/) do
+  # drop to shell to call command line
+  # keystore retrieve --table --key
+  pending # Write code here that turns the phrase above into concrete actions
+end
