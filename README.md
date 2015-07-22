@@ -44,7 +44,9 @@ Okay, now from the the root of the repo you can do these things.
 
 ## cli 
 
-tbd.  probably something like `keystore store --table table_name --key key_name --value value` and `keystore retrieve --table table_name --key key_name`
+    ruby bin/keystore.rb store --table dynamoTableName --keyname keyname --kmsid kmsKeyId --value valueToStore
+
+    ruby bin/keystore.rb retrieve --table dyanmoTableName --keyname keyname 
 
 # license :key:
 
