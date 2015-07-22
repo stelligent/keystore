@@ -24,6 +24,7 @@ class Keystore
 
   def retrieve(params)
     item = @options[:dynamo].get_item(table_name: @options[:table_name], key: { ParameterName: params[:key] }).item
+    fail "keyname #{params[:key]} not found" if item.nil?
     encoded_value = item['Value']
     encrypted_value = Base64.decode64(encoded_value)
     @options[:kms].decrypt(ciphertext_blob: encrypted_value).plaintext
