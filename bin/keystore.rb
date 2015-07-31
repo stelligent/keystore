@@ -1,4 +1,4 @@
-require_relative '../lib/keystore'
+require 'keystore'
 require 'aws-sdk-core'
 require 'trollop'
 

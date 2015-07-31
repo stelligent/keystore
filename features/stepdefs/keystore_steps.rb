@@ -1,5 +1,5 @@
 require 'aws-sdk-core'
-require_relative '../../lib/keystore.rb'
+require 'keystore'
 
 Given(/^test data to use$/) do
   @key = "testkey#{Time.now.strftime '%Y%m%d%H%M%S'}"

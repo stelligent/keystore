@@ -1,4 +1,4 @@
-require_relative '../lib/keystore.rb'
+require 'keystore'
 
 # mock dynamo return value
 class DDBResult
