@@ -76,7 +76,6 @@ end
 When(/^I store a value using the command line interface$/) do
   command = "keystore.rb store --table #{@table_name} --keyname #{@key}-cli --kmsid #{@key_id} --value #{@value}-cli"
   `#{command}`
-  # sleep 5
 end
 
 Then(/^I should see that encrypted data from the CLI in the raw data store$/) do
