@@ -82,3 +82,50 @@ Then(/^I should see that encrypted data from the CLI in the raw data store$/) do
   expect(result).to be
   expect(result['Value']).not_to eq @value
 end
+
+When(/^I store an empty value in the keystore$/) do
+  @dynamo = Aws::DynamoDB::Client.new region: @region
+  @kms = Aws::KMS::Client.new region: @region
+  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id
+  keystore.store key: @key, value: ''
+end
+
+When(/^I retrieve an empty value from the keystore$/) do
+  @dynamo = Aws::DynamoDB::Client.new region: @region
+  @kms = Aws::KMS::Client.new region: @region
+  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id
+  keystore.store key: @key, value: ''
+  @result = keystore.retrieve key: @key
+  expect(@result).to be
+  expect(@result.empty?).to be true
+end
+
+Then(/^I should get an empty string back$/) do
+  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms
+  @result = keystore.retrieve key: @key
+  expect(@result).to eq ''
+end
+
+When(/^I store a blank value using the command line interface$/) do
+  command = "ruby bin/keystore.rb store --table #{@table_name} --keyname #{@key}-cli --kmsid #{@key_id} --value ''"
+  `#{command}`
+end
+
+When(/^I retrieve a blank value using the command line interface$/) do
+  # add the data to look up
+  @dynamo = Aws::DynamoDB::Client.new region: @region
+  @kms = Aws::KMS::Client.new region: @region
+  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id
+  keystore.store key: "#{@key}-cli", value: ''
+
+  command = "ruby bin/keystore.rb retrieve --table #{@table_name} --keyname #{@key}-cli"
+  `#{command}`
+end
+
+Then(/^I should get an empty string back in plaintext$/) do
+  @dynamo = Aws::DynamoDB::Client.new region: @region
+  @kms = Aws::KMS::Client.new region: @region
+  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms
+  @result = keystore.retrieve key: "#{@key}-cli"
+  expect(@result.empty?).to be true
+end

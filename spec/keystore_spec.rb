@@ -37,6 +37,44 @@ RSpec.describe 'Keystore' do
     end
   end
 
+  context 'it can store empty values' do
+    it 'will call KMS with an empty string to store the value' do
+      mock_ddb = double('AWS::DynamoDB::Client')
+      expect(mock_ddb).to receive(:put_item)
+
+      mock_kms = double('AWS::KMS::Client')
+      expect(mock_kms).to receive(:encrypt).with(key_id: 'dontcare', plaintext: ' ').and_return(KMSResult.new('dontcare'))
+
+      keystore = Keystore.new dynamo: mock_ddb, table_name: 'dontcare', kms: mock_kms, key_id: 'dontcare'
+
+      begin
+        keystore.store key: 'testkey', value: ''
+      rescue StandardError => e
+        message = "Unexpected exception thrown: #{e}"
+        raise message
+      end
+    end
+  end
+
+  context 'it can store nil values' do
+    it 'will call KMS with an empty string to store the value' do
+      mock_ddb = double('AWS::DynamoDB::Client')
+      expect(mock_ddb).to receive(:put_item)
+
+      mock_kms = double('AWS::KMS::Client')
+      expect(mock_kms).to receive(:encrypt).with(key_id: 'dontcare', plaintext: ' ').and_return(KMSResult.new('dontcare'))
+
+      keystore = Keystore.new dynamo: mock_ddb, table_name: 'dontcare', kms: mock_kms, key_id: 'dontcare'
+
+      begin
+        keystore.store key: 'testkey', value: ''
+      rescue StandardError => e
+        message = "Unexpected exception thrown: #{e}"
+        raise message
+      end
+    end
+  end
+
   context 'it can retrieve stored values' do
     it 'will return data for a given key' do
       mock_ddb = double('AWS::DynamoDB::Client')
@@ -51,6 +89,28 @@ RSpec.describe 'Keystore' do
         result = keystore.retrieve key: 'testkey'
         expect(result).to be
         expect(result).to eq 'testvalue'
+      rescue StandardError => e
+        message = "Unexpected exception thrown: #{e}"
+        raise message
+      end
+    end
+  end
+
+  context 'it can retrieve blank values' do
+    it 'will return an empty string when it retrieves a nil or blank value' do
+      mock_ddb = double('AWS::DynamoDB::Client')
+      expect(mock_ddb).to receive(:get_item).and_return(DDBResult.new(Base64.encode64('dontcare')))
+
+      mock_kms = double('AWS::KMS::Client')
+      expect(mock_kms).to receive(:decrypt).and_return(KMSResult.new(' '))
+
+      keystore = Keystore.new dynamo: mock_ddb, table_name: 'dontcare', kms: mock_kms
+
+      begin
+        result = keystore.retrieve key: 'testkey'
+        expect(result).to be
+        expect(result.empty?).to be true
+        expect(result).to eq ''
       rescue StandardError => e
         message = "Unexpected exception thrown: #{e}"
         raise message

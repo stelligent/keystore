@@ -34,7 +34,7 @@ cmd_opts =
       opt :table, 'the name of the table to perform the lookup on', required: true, type: String
     end
   else
-    Trollop.die "usage: keystore.rb [store|retrieve] [parameters]"
+    Trollop.die 'usage: keystore.rb [store|retrieve] [parameters]'
   end
 
 dynamo = Aws::DynamoDB::Client.new region: global_opts[:region]
