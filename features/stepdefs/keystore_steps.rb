@@ -2,8 +2,10 @@ require 'aws-sdk-core'
 require 'keystore'
 
 Given(/^test data to use$/) do
-  @key = "testkey#{Time.now.strftime '%Y%m%d%H%M%S'}"
-  @value = "testvalue#{Time.now.strftime '%Y%m%d%H%M%S'}"
+  timestamp = "2015.11.16.10.52.15" #Time.now.strftime '%Y%m%d%H%M%S'
+  @key = "testkey#{timestamp}"
+  @value = "testvalue#{timestamp}"
+  puts "#{@key}, #{@value}"
 end
 
 Given(/^a region to operate in$/) do
@@ -72,6 +74,8 @@ end
 When(/^I store a value using the command line interface$/) do
   command = "ruby bin/keystore.rb store --table #{@table_name} --keyname #{@key}-cli --kmsid #{@key_id} --value #{@value}-cli"
   `#{command}`
+  puts command
+  sleep 2
 end
 
 Then(/^I should see that encrypted data from the CLI in the raw data store$/) do
@@ -79,7 +83,9 @@ Then(/^I should see that encrypted data from the CLI in the raw data store$/) do
   @kms = Aws::KMS::Client.new region: @region
   name = { 'ParameterName' => "#{@key}-cli" }
   result = @dynamo.get_item(table_name: @table_name, key: name).item
-  expect(result).to be
+  puts "result = @dynamo.get_item(table_name: #{@table_name}, key: #{name}).item"
+  puts "result: '#{result}'"
+  expect(result.nil?).to be false
   expect(result['Value']).not_to eq @value
 end
 

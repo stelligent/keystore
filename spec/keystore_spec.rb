@@ -117,4 +117,23 @@ RSpec.describe 'Keystore' do
       end
     end
   end
+
+  context 'it handles missing keys' do
+    it 'will throw a specific error if the key does not exist' do
+      mock_ddb = double('AWS::DynamoDB::Client')
+      expect(mock_ddb).to receive(:get_item).and_return(DDBResult.new(nil))
+
+      mock_kms = double('AWS::KMS::Client')
+
+      keystore = Keystore.new dynamo: mock_ddb, table_name: 'dontcare', kms: mock_kms
+
+      begin
+        result = keystore.retrieve key: 'doesnotexist'
+        fail "Keystore did not throw exception on invalid key"
+      rescue KeyNotFoundError => e
+        # expected error
+        puts e.message
+      end
+    end
+  end
 end
