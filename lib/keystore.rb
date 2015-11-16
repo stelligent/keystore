@@ -17,7 +17,6 @@ class Keystore
     value_to_encrypt = params[:value].nil? || params[:value].empty? ? ' ' : params[:value]
     encrypted_value = @options[:kms].encrypt(key_id: @options[:key_id], plaintext: value_to_encrypt).ciphertext_blob
     encoded_value = Base64.encode64(encrypted_value)
-    puts "@options[:dynamo].put_item(table_name: #{@options[:table_name]}, item: { ParameterName: #{params[:key]}, Value: #{encoded_value} } )"
     @options[:dynamo].put_item(
       table_name: @options[:table_name],
       item: { ParameterName: params[:key], Value: encoded_value }

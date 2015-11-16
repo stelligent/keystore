@@ -1,11 +1,13 @@
 require 'aws-sdk-core'
 require 'keystore'
 
+timestamp = Time.now.strftime '%Y%m%d%H%M%S'
+ts_key = "testkey#{timestamp}"
+ts_val = "testvalue#{timestamp}"
+
 Given(/^test data to use$/) do
-  timestamp = "2015.11.16.10.52.15" #Time.now.strftime '%Y%m%d%H%M%S'
-  @key = "testkey#{timestamp}"
-  @value = "testvalue#{timestamp}"
-  puts "#{@key}, #{@value}"
+  @key = ts_key
+  @value = ts_val
 end
 
 Given(/^a region to operate in$/) do
@@ -59,7 +61,7 @@ When(/^I retrieve a value using the command line interface$/) do
   keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id
   keystore.store key: "#{@key}-cli", value: @value
 
-  command = "ruby bin/keystore.rb retrieve --table #{@table_name} --keyname #{@key}-cli"
+  command = "keystore.rb retrieve --table #{@table_name} --keyname #{@key}-cli"
   `#{command}`
 end
 
@@ -72,10 +74,9 @@ Then(/^I should get that CLI entered data back in plaintext$/) do
 end
 
 When(/^I store a value using the command line interface$/) do
-  command = "ruby bin/keystore.rb store --table #{@table_name} --keyname #{@key}-cli --kmsid #{@key_id} --value #{@value}-cli"
+  command = "keystore.rb store --table #{@table_name} --keyname #{@key}-cli --kmsid #{@key_id} --value #{@value}-cli"
   `#{command}`
-  puts command
-  sleep 2
+  # sleep 5
 end
 
 Then(/^I should see that encrypted data from the CLI in the raw data store$/) do
@@ -83,8 +84,6 @@ Then(/^I should see that encrypted data from the CLI in the raw data store$/) do
   @kms = Aws::KMS::Client.new region: @region
   name = { 'ParameterName' => "#{@key}-cli" }
   result = @dynamo.get_item(table_name: @table_name, key: name).item
-  puts "result = @dynamo.get_item(table_name: #{@table_name}, key: #{name}).item"
-  puts "result: '#{result}'"
   expect(result.nil?).to be false
   expect(result['Value']).not_to eq @value
 end
@@ -113,7 +112,7 @@ Then(/^I should get an empty string back$/) do
 end
 
 When(/^I store a blank value using the command line interface$/) do
-  command = "ruby bin/keystore.rb store --table #{@table_name} --keyname #{@key}-cli --kmsid #{@key_id} --value ''"
+  command = "keystore.rb store --table #{@table_name} --keyname #{@key}-cli --kmsid #{@key_id} --value ''"
   `#{command}`
 end
 
@@ -124,7 +123,7 @@ When(/^I retrieve a blank value using the command line interface$/) do
   keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id
   keystore.store key: "#{@key}-cli", value: ''
 
-  command = "ruby bin/keystore.rb retrieve --table #{@table_name} --keyname #{@key}-cli"
+  command = "keystore.rb retrieve --table #{@table_name} --keyname #{@key}-cli"
   `#{command}`
 end
 
