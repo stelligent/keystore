@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'keystore'
 require 'aws-sdk-core'
 require 'trollop'
