@@ -128,8 +128,8 @@ RSpec.describe 'Keystore' do
       keystore = Keystore.new dynamo: mock_ddb, table_name: 'dontcare', kms: mock_kms
 
       begin
-        result = keystore.retrieve key: 'doesnotexist'
-        fail "Keystore did not throw exception on invalid key"
+        keystore.retrieve key: 'doesnotexist'
+        fail 'Keystore did not throw exception on invalid key'
       rescue KeyNotFoundError => e
         # expected error
         puts e.message
