@@ -4,7 +4,7 @@ spec = Gem::Specification.new do |s|
   s.name          = 'keystore'
   s.executables  << 'keystore.rb'
   s.license       = 'MIT'
-  s.version       = '0.1.3'
+  s.version       = '0.1.4'
   s.author        = [ 'Jonny Sywulak', 'Stelligent' ]
   s.email         = 'jonny@stelligent.com'
   s.homepage      = 'http://www.stelligent.com'
