@@ -12,10 +12,11 @@ class Keystore
 
   def store(params)
     # only need key id to encrypt, so check for it here
-    fail 'need to specify key_id parameter' if @options[:key_id].nil?
+    fail 'need to specify key_id or key_alias parameter' if @options[:key_id].nil? and @options[:key_alias].nil?
+    key_id = @options[:key_id] || get_kms_keyid(@options[:key_alias])
 
     value_to_encrypt = params[:value].nil? || params[:value].empty? ? ' ' : params[:value]
-    encrypted_value = @options[:kms].encrypt(key_id: @options[:key_id], plaintext: value_to_encrypt).ciphertext_blob
+    encrypted_value = @options[:kms].encrypt(key_id: key_id, plaintext: value_to_encrypt).ciphertext_blob
     encoded_value = Base64.encode64(encrypted_value)
     @options[:dynamo].put_item(
       table_name: @options[:table_name],
@@ -31,6 +32,15 @@ class Keystore
     encrypted_value = Base64.decode64(encoded_value)
     result = @options[:kms].decrypt(ciphertext_blob: encrypted_value).plaintext
     result.strip
+  end
+
+  private
+  def get_kms_keyid(key_alias)
+    begin
+      @options[:kms].list_aliases.aliases.find { |resp| resp.alias_name == "alias/#{key_alias}" }.target_key_id
+    rescue NoMethodError
+      fail "#{key_alias} is not a valid kms key alias"
+    end
   end
 end
 

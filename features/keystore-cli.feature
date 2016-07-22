@@ -5,7 +5,7 @@ Feature: Storing encrypted values with CLI
     Background:
         Given a region to operate in
         And a DynamoDB table to use
-        And a KMS key id to use
+        And a KMS key id or KMS key alias to use
         And test data to use
 
     @flakey
