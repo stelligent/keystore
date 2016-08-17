@@ -65,6 +65,7 @@ DEPENDENCIES
   cucumber
   keystore
   nyan-cat-formatter
+  rspec
   rubocop
   trollop
 
