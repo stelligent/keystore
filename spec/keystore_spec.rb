@@ -144,7 +144,7 @@ RSpec.describe 'Keystore' do
 
       begin
         keystore.retrieve key: 'doesnotexist'
-        fail 'Keystore did not throw exception on invalid key'
+        raise 'Keystore did not throw exception on invalid key'
       rescue KeyNotFoundError => e
         # expected error
         puts e.message
