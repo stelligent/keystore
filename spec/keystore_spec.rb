@@ -87,7 +87,9 @@ RSpec.describe 'Keystore' do
   context 'it can retrieve stored values' do
     it 'will return data for a given key' do
       mock_ddb = double('AWS::DynamoDB::Client')
-      expect(mock_ddb).to receive(:get_item).and_return(DDBResult.new(Base64.encode64('dontcare')))
+      expect(mock_ddb).to receive(:query).and_return(
+        DDBQueryOutput.new([DDBResult.new(Base64.encode64('dontcare'))])
+      )
 
       mock_kms = double('AWS::KMS::Client')
       expect(mock_kms).to receive(:decrypt).and_return(KMSResult.new('testvalue'))
@@ -108,7 +110,9 @@ RSpec.describe 'Keystore' do
   context 'it can retrieve blank values' do
     it 'will return an empty string when it retrieves a nil or blank value' do
       mock_ddb = double('AWS::DynamoDB::Client')
-      expect(mock_ddb).to receive(:get_item).and_return(DDBResult.new(Base64.encode64('dontcare')))
+      expect(mock_ddb).to receive(:query).and_return(
+        DDBQueryOutput.new([DDBResult.new(Base64.encode64('dontcare'))])
+      )
 
       mock_kms = double('AWS::KMS::Client')
       expect(mock_kms).to receive(:decrypt).and_return(KMSResult.new(' '))
@@ -130,7 +134,9 @@ RSpec.describe 'Keystore' do
   context 'it handles missing keys' do
     it 'will throw a specific error if the key does not exist' do
       mock_ddb = double('AWS::DynamoDB::Client')
-      expect(mock_ddb).to receive(:get_item).and_return(DDBResult.new(nil))
+      expect(mock_ddb).to receive(:query).and_return(
+        DDBQueryOutput.new([DDBResult.new(nil)])
+      )
 
       mock_kms = double('AWS::KMS::Client')
 
