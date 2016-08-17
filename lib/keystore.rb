@@ -112,6 +112,8 @@ class Keystore
     item = response.items[0]
     # If no keystore_format or v1, assume v1 and do direct kms decrypt
     if item['keystore_format'].nil? || item['keystore_format'].eql?('v1')
+      raise KeyNotFoundError.new, "keyname #{params[:key]} not found" \
+        if item['Value'].nil?
       encoded_value = item['Value']
       encrypted_value = Base64.decode64(encoded_value)
       result = @options[:kms].decrypt(ciphertext_blob: encrypted_value).plaintext
@@ -126,6 +128,8 @@ class Keystore
 
   # Decrypt a keystore format v2 ddb item
   def decrypt_v2_item(item)
+    raise KeyNotFoundError, "No value for #{item['name']}\n" \
+      if item['contents'].nil?
     material = item
     ciphertext = Base64.decode(material['contents'])
     # Decrypt envelope key
