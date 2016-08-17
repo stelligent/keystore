@@ -4,7 +4,7 @@ require 'keystore'
 require 'aws-sdk-core'
 require 'trollop'
 
-SUB_COMMANDS = %w(store retrieve)
+SUB_COMMANDS = %w(store retrieve).freeze
 global_opts = Trollop.options do
   opt :region, 'The region to look for the dynamodb in', default: 'us-east-1'
   banner 'utility for storing and retrieving encrypted values
@@ -49,5 +49,5 @@ when 'retrieve'
   result = keystore.retrieve key: cmd_opts[:keyname]
   puts result
 else
-  fail "unknown subcommand #{cmd}"
+  raise "unknown subcommand #{cmd}"
 end
