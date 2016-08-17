@@ -8,6 +8,15 @@ class DDBResult
   end
 end
 
+class DDBQueryOutput
+  attr_accessor :count
+  attr_accessor :items
+  def initialize(items)
+    @items = items.map(&:item)
+    @count = items.length
+  end
+end
+
 # mock KMS return value
 class KMSResult
   attr_accessor :ciphertext_blob, :plaintext
