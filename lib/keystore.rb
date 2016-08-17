@@ -104,8 +104,7 @@ class Keystore
                                        'ParameterName = :key',
                                        expression_attribute_values: {
                                          ':key' => params[:key]
-                                       },
-                                       key: { ParameterName: params[:key] })
+                                       })
     if response.count.zero?
       # TODO: add retry logic for credstash stores
       raise KeyNotFoundError.new, "keyname #{params[:key]} not found"
