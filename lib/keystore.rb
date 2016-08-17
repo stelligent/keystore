@@ -165,21 +165,20 @@ class Keystore
     response = @options[:dynamo].get_item(
       table_name: @options[:table_name],
       key: { 'ParameterName' => params[:key],
-             'version' => params[:version] })
-    fail "Key #{params[:key]} not found" if response.item.nil? || !response.item
+             'version' => params[:version] }
+    )
+    raise "Key #{params[:key]} not found" if response.item.nil? || !response.item
     item = response.item
     if item['keystore_format'] && item['keystore_format'].eql?('v2')
       return decrypt_v2_item(item)
     end
-    fail "Unknown keystore_format: #{item['keystore_format']}"
+    raise "Unknown keystore_format: #{item['keystore_format']}"
   end
 
   def get_kms_keyid(key_alias)
-    begin
-      @options[:kms].list_aliases.aliases.find { |resp| resp.alias_name == "alias/#{key_alias}" }.target_key_id
-    rescue NoMethodError
-      fail "#{key_alias} is not a valid kms key alias"
-    end
+    @options[:kms].list_aliases.aliases.find { |resp| resp.alias_name == "alias/#{key_alias}" }.target_key_id
+  rescue NoMethodError
+    raise "#{key_alias} is not a valid kms key alias"
   end
 end
 
