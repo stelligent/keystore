@@ -17,8 +17,8 @@ class Keystore
     # Default to creating default credential chain KMS and DDB clients in
     # us-east-1, if not passed dynamo/kms clients to use
     @options[:region] ||= 'us-east-1'
-    @options[:dynamo] ||= Aws::DynamoDB::Client.new(region: @options[:region])
-    @options[:kms] ||= Aws::KMS::Client.new(region: @options[:region])
+    # @options[:dynamo] ||= Aws::DynamoDB::Client.new(region: @options[:region])
+    # @options[:kms] ||= Aws::KMS::Client.new(region: @options[:region])
     # Default to DDB table 'keystore-table' and KMS alias 'keystore' if
     # not otherwise specified
     @options[:table_name] ||= 'keystore-table'
