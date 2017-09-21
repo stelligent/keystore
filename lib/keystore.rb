@@ -1,4 +1,10 @@
 require 'aws-sdk-core'
+begin
+  require 'aws-sdk-dynamodb'
+  require 'aws-sdk-kms'
+rescue LoadError
+  puts 'Unable to load sdk v3 libs'
+end
 require 'base64'
 
 # utility to use AWS services to handle encryption and storage of secret data.
