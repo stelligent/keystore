@@ -33,9 +33,14 @@ describe 'Keystore' do
       expect(mock_ddb).to receive(:put_item)
 
       mock_kms = double('AWS::KMS::Client')
-      expect(mock_kms).to receive(:encrypt).and_return(KMSResult.new('dontcare'))
+      expect(mock_kms).to(
+        receive(:encrypt).and_return(KMSResult.new('dontcare'))
+      )
 
-      keystore = Keystore.new dynamo: mock_ddb, table_name: 'dontcare', kms: mock_kms, key_id: 'dontcare', key_alias: 'dontcare'
+      keystore = Keystore.new dynamo: mock_ddb,
+                              table_name: 'dontcare',
+                              kms: mock_kms, key_id: 'dontcare',
+                              key_alias: 'dontcare'
 
       begin
         keystore.store key: 'testkey', value: 'testvalue'
@@ -52,9 +57,17 @@ describe 'Keystore' do
       expect(mock_ddb).to receive(:put_item)
 
       mock_kms = double('AWS::KMS::Client')
-      expect(mock_kms).to receive(:encrypt).with(key_id: 'dontcare', plaintext: "\0").and_return(KMSResult.new('dontcare'))
+      expect(mock_kms).to(
+        receive(:encrypt).with(key_id: 'dontcare',
+                               plaintext: "\0")
+                                  .and_return(KMSResult.new('dontcare'))
+      )
 
-      keystore = Keystore.new dynamo: mock_ddb, table_name: 'dontcare', kms: mock_kms, key_id: 'dontcare', key_alias: 'dontcare'
+      keystore = Keystore.new dynamo: mock_ddb,
+                              table_name: 'dontcare',
+                              kms: mock_kms,
+                              key_id: 'dontcare',
+                              key_alias: 'dontcare'
 
       begin
         keystore.store key: 'testkey', value: ''
@@ -71,9 +84,16 @@ describe 'Keystore' do
       expect(mock_ddb).to receive(:put_item)
 
       mock_kms = double('AWS::KMS::Client')
-      expect(mock_kms).to receive(:encrypt).with(key_id: 'dontcare', plaintext: "\0").and_return(KMSResult.new('dontcare'))
+      expect(mock_kms).to(
+        receive(:encrypt).with(key_id: 'dontcare',
+                               plaintext: "\0")
+                         .and_return(KMSResult.new('dontcare'))
+      )
 
-      keystore = Keystore.new dynamo: mock_ddb, table_name: 'dontcare', kms: mock_kms, key_id: 'dontcare', key_alias: 'dontcare'
+      keystore = Keystore.new dynamo: mock_ddb, table_name: 'dontcare',
+                              kms: mock_kms,
+                              key_id: 'dontcare',
+                              key_alias: 'dontcare'
 
       begin
         keystore.store key: 'testkey', value: ''
@@ -92,9 +112,12 @@ describe 'Keystore' do
       )
 
       mock_kms = double('AWS::KMS::Client')
-      expect(mock_kms).to receive(:decrypt).and_return(KMSResult.new('testvalue'))
+      expect(mock_kms).to(
+        receive(:decrypt).and_return(KMSResult.new('testvalue'))
+      )
 
-      keystore = Keystore.new dynamo: mock_ddb, table_name: 'dontcare', kms: mock_kms
+      keystore = Keystore.new dynamo: mock_ddb,
+                              table_name: 'dontcare', kms: mock_kms
 
       begin
         result = keystore.retrieve key: 'testkey'
@@ -117,7 +140,9 @@ describe 'Keystore' do
       mock_kms = double('AWS::KMS::Client')
       expect(mock_kms).to receive(:decrypt).and_return(KMSResult.new(' '))
 
-      keystore = Keystore.new dynamo: mock_ddb, table_name: 'dontcare', kms: mock_kms
+      keystore = Keystore.new dynamo: mock_ddb,
+                              table_name: 'dontcare',
+                              kms: mock_kms
 
       begin
         result = keystore.retrieve key: 'testkey'
@@ -140,7 +165,9 @@ describe 'Keystore' do
 
       mock_kms = double('AWS::KMS::Client')
 
-      keystore = Keystore.new dynamo: mock_ddb, table_name: 'dontcare', kms: mock_kms
+      keystore = Keystore.new dynamo: mock_ddb,
+                              table_name: 'dontcare',
+                              kms: mock_kms
 
       begin
         keystore.retrieve key: 'doesnotexist'
