@@ -29,7 +29,11 @@ end
 When(/^I store a value in the keystore$/) do
   @dynamo = Aws::DynamoDB::Client.new region: @region
   @kms = Aws::KMS::Client.new region: @region
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id, key_alias: @key_alias
+  keystore = Keystore.new dynamo: @dynamo,
+                          table_name: @table_name,
+                          kms: @kms,
+                          key_id: @key_id,
+                          key_alias: @key_alias
   keystore.store key: @key, value: @value
 end
 
@@ -43,7 +47,11 @@ end
 When(/^I retrieve a value from the keystore$/) do
   @dynamo = Aws::DynamoDB::Client.new region: @region
   @kms = Aws::KMS::Client.new region: @region
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id, key_alias: @key_alias
+  keystore = Keystore.new dynamo: @dynamo,
+                          table_name: @table_name,
+                          kms: @kms,
+                          key_id: @key_id,
+                          key_alias: @key_alias
   keystore.store key: @key, value: @value
   @result = keystore.retrieve key: @key
   expect(@result).to be
@@ -59,7 +67,11 @@ When(/^I retrieve a value using the command line interface$/) do
   # add the data to look up
   @dynamo = Aws::DynamoDB::Client.new region: @region
   @kms = Aws::KMS::Client.new region: @region
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id, key_alias: @key_alias
+  keystore = Keystore.new dynamo: @dynamo,
+                          table_name: @table_name,
+                          kms: @kms,
+                          key_id: @key_id,
+                          key_alias: @key_alias
   keystore.store key: "#{@key}-cli", value: @value
 
   command = "bin/keystore.rb retrieve --table #{@table_name} --keyname #{@key}-cli"
@@ -69,7 +81,8 @@ end
 Then(/^I should get that CLI entered data back in plaintext$/) do
   @dynamo = Aws::DynamoDB::Client.new region: @region
   @kms = Aws::KMS::Client.new region: @region
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms
+  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name,
+                          kms: @kms
   @result = keystore.retrieve key: "#{@key}-cli"
   expect(@result).to eq @value
 end
@@ -96,14 +109,18 @@ end
 When(/^I store an empty value in the keystore$/) do
   @dynamo = Aws::DynamoDB::Client.new region: @region
   @kms = Aws::KMS::Client.new region: @region
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id, key_alias: @key_alias
+  keystore = Keystore.new dynamo: @dynamo,
+                          table_name: @table_name, kms: @kms,
+                          key_id: @key_id, key_alias: @key_alias
   keystore.store key: @key, value: ''
 end
 
 When(/^I retrieve an empty value from the keystore$/) do
   @dynamo = Aws::DynamoDB::Client.new region: @region
   @kms = Aws::KMS::Client.new region: @region
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id, key_alias: @key_alias
+  keystore = Keystore.new dynamo: @dynamo,
+                          table_name: @table_name, kms: @kms,
+                          key_id: @key_id, key_alias: @key_alias
   keystore.store key: @key, value: ''
   @result = keystore.retrieve key: @key
   expect(@result).to be
@@ -111,7 +128,8 @@ When(/^I retrieve an empty value from the keystore$/) do
 end
 
 Then(/^I should get an empty string back$/) do
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms
+  keystore = Keystore.new dynamo: @dynamo,
+                          table_name: @table_name, kms: @kms
   @result = keystore.retrieve key: @key
   expect(@result).to eq ''
 end
@@ -130,7 +148,9 @@ When(/^I retrieve a blank value using the command line interface$/) do
   # add the data to look up
   @dynamo = Aws::DynamoDB::Client.new region: @region
   @kms = Aws::KMS::Client.new region: @region
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms, key_id: @key_id, key_alias: @key_alias
+  keystore = Keystore.new dynamo: @dynamo,
+                          table_name: @table_name, kms: @kms,
+                          key_id: @key_id, key_alias: @key_alias
   keystore.store key: "#{@key}-cli", value: ''
 
   command = "bin/keystore.rb retrieve --table #{@table_name} --keyname #{@key}-cli"
@@ -140,7 +160,8 @@ end
 Then(/^I should get an empty string back in plaintext$/) do
   @dynamo = Aws::DynamoDB::Client.new region: @region
   @kms = Aws::KMS::Client.new region: @region
-  keystore = Keystore.new dynamo: @dynamo, table_name: @table_name, kms: @kms
+  keystore = Keystore.new dynamo: @dynamo,
+                          table_name: @table_name, kms: @kms
   @result = keystore.retrieve key: "#{@key}-cli"
   expect(@result.empty?).to be true
 end
