@@ -92,12 +92,20 @@ class Keystore
                   'keystore key to retrieve/store') do |e|
             @opts[:keyname] = e
           end
+          opts.on('-t', '--table=TABLE',
+                  'DynamoDB table to retrieve/store from') do |t|
+            @opts[:table] = t
+          end
         end,
         'retrieve' => OptionParser.new do |opts|
           opts.banner = "Usage: #{$PROGRAM_NAME} retrieve [options]"
           opts.on('-k', '--keyname=KEY',
                   'keystore key to retrieve/store') do |k|
             @opts[:keyname] = k
+          end
+          opts.on('-t', '--table=TABLE',
+                  'DynamoDB table to retrieve/store from') do |t|
+            @opts[:table] = t
           end
         end
       }
