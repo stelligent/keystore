@@ -123,7 +123,7 @@ class Keystore
     case @options[:keystore_format]
     when 'v1'
       # old version, encrypt data directly with KMS
-      put_v1(params[:value])
+      put_v1(**params)
     when 'v2'
       put_v2(params[:value])
     else
