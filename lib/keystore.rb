@@ -12,7 +12,8 @@ require 'openssl'
 class Keystore
   def initialize(params = {})
     @options = {
-      # Default to keystore storage format v1 (raw KMS encrypt of data in DDB, base64)
+      # Default to keystore storage format v1 (raw KMS encrypt of data in DDB,
+      # base64)
       keystore_format: 'v1',
       # Default to creating default credential chain KMS and DDB clients in
       # us-east-1, if not passed dynamo/kms clients to use
@@ -156,7 +157,8 @@ class Keystore
         if item['Value'].nil?
       encoded_value = item['Value']
       encrypted_value = Base64.decode64(encoded_value)
-      result = @options[:kms].decrypt(ciphertext_blob: encrypted_value).plaintext
+      result = @options[:kms].decrypt(ciphertext_blob: encrypted_value)
+                             .plaintext
       return result.strip
     end
     # If keystore format v2, do credstash-compatible decrypt
@@ -216,7 +218,9 @@ class Keystore
   end
 
   def get_kms_keyid(key_alias)
-    @options[:kms].list_aliases.aliases.find { |resp| resp.alias_name == "alias/#{key_alias}" }.target_key_id
+    @options[:kms].list_aliases.aliases.find do |resp|
+      resp.alias_name == "alias/#{key_alias}"
+    end.target_key_id
   rescue NoMethodError
     raise "#{key_alias} is not a valid kms key alias"
   end
