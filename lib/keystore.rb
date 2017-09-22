@@ -202,13 +202,13 @@ class Keystore
 
   # Retrieve a versioned key
   def retrieve_versioned(params)
-    response = @options[:dynamo].get_item(
+    item = @options[:dynamo].get_item(
       table_name: @options[:table_name],
       key: { 'ParameterName' => params[:key],
              'version' => params[:version] }
-    )
-    raise "Key #{params[:key]} not found" if response.item.nil? || !response.item
-    item = response.item
+    ).item
+    raise "Key #{params[:key]} not found" if item.nil? || !item
+
     if item['keystore_format'] && item['keystore_format'].eql?('v2')
       return decrypt_v2_item(item)
     end
