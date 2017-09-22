@@ -5,8 +5,7 @@ begin
 rescue LoadError
   nil
 end
-require 'base64'
-require 'openssl'
+require 'keystore/retrieve'
 require 'keystore/store'
 
 # utility to use AWS services to handle encryption and storage of secret data.

@@ -1,3 +1,6 @@
+require 'base64'
+require 'openssl'
+
 class Keystore
   # Keystore::Store provides the keystore storage methods used
   # to put encrypted data into DDB

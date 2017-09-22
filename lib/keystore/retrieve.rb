@@ -1,3 +1,6 @@
+require 'base64'
+require 'openssl'
+
 class Keystore
   # Keystore::Retrieve provides the keystore retrieval methods used
   # to pull encrypted data from DDB
