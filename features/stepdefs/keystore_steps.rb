@@ -74,7 +74,8 @@ When(/^I retrieve a value using the command line interface$/) do
                           key_alias: @key_alias
   keystore.store key: "#{@key}-cli", value: @value
 
-  command = "bin/keystore.rb retrieve --table #{@table_name} --keyname #{@key}-cli"
+  command = "bin/keystore.rb retrieve --table #{@table_name}" \
+            " --keyname #{@key}-cli"
   `#{command}`
 end
 
@@ -93,7 +94,8 @@ When(/^I store a value using the command line interface$/) do
               else
                 "--kmsalias #{@key_alias}"
               end
-  command = "bin/keystore.rb store --table #{@table_name} --keyname #{@key}-cli --value #{@value}-cli #{kmsoption}"
+  command = "bin/keystore.rb store --table #{@table_name}" \
+            " --keyname #{@key}-cli --value #{@value}-cli #{kmsoption}"
   `#{command}`
 end
 
@@ -140,7 +142,8 @@ When(/^I store a blank value using the command line interface$/) do
               else
                 "--kmsalias #{@key_alias}"
               end
-  command = "bin/keystore.rb store --table #{@table_name} --keyname #{@key}-cli #{kmsoption} --value ''"
+  command = "bin/keystore.rb store --table #{@table_name}" \
+            " --keyname #{@key}-cli #{kmsoption} --value ''"
   `#{command}`
 end
 
@@ -153,7 +156,8 @@ When(/^I retrieve a blank value using the command line interface$/) do
                           key_id: @key_id, key_alias: @key_alias
   keystore.store key: "#{@key}-cli", value: ''
 
-  command = "bin/keystore.rb retrieve --table #{@table_name} --keyname #{@key}-cli"
+  command = "bin/keystore.rb retrieve --table #{@table_name}" \
+            " --keyname #{@key}-cli"
   `#{command}`
 end
 

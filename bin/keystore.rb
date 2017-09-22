@@ -23,16 +23,27 @@ cmd_opts =
   case cmd
   when 'store'
     Trollop.options do
-      opt :value, 'the value to be inserted into the keystore (required for store)', required: true, type: String
-      opt :kmsid, 'the kms key id to use to encrypt the data (conditionally required for store)', type: String
-      opt :kmsalias, 'the kms key alias to use to encrypt the data(conditionally required for store)', type: String
-      opt :keyname, 'the name of the key associated with the value', required: true, type: String
-      opt :table, 'the name of the table to perform the lookup on', required: true, type: String
+      opt :value,
+          'the value to be inserted into the keystore (required for store)',
+          required: true, type: String
+      opt :kmsid,
+          'the kms key id to use to encrypt the data (conditionally ' \
+          'required for store)',
+          type: String
+      opt :kmsalias,
+          'the kms key alias to use to encrypt the data(conditionally ' \
+          'required for store)', type: String
+      opt :keyname, 'the name of the key associated with the value',
+          required: true, type: String
+      opt :table, 'the name of the table to perform the lookup on',
+          required: true, type: String
     end
   when 'retrieve'
     Trollop.options do
-      opt :keyname, 'the name of the key associated with the value', required: true, type: String
-      opt :table, 'the name of the table to perform the lookup on', required: true, type: String
+      opt :keyname, 'the name of the key associated with the value',
+          required: true, type: String
+      opt :table, 'the name of the table to perform the lookup on',
+          required: true, type: String
     end
   else
     Trollop.die 'usage: keystore.rb [store|retrieve] [parameters]'
@@ -40,7 +51,11 @@ cmd_opts =
 
 dynamo = Aws::DynamoDB::Client.new region: global_opts[:region]
 kms = Aws::KMS::Client.new region: global_opts[:region]
-keystore = Keystore.new dynamo: dynamo, table_name: cmd_opts[:table], kms: kms, key_id: cmd_opts[:kmsid], key_alias: cmd_opts[:kmsalias]
+keystore = Keystore.new dynamo: dynamo,
+                        table_name: cmd_opts[:table],
+                        kms: kms,
+                        key_id: cmd_opts[:kmsid],
+                        key_alias: cmd_opts[:kmsalias]
 
 case cmd
 when 'store'
