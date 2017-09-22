@@ -48,15 +48,14 @@ class Keystore
               params.keys).empty?
         raise 'Insufficient v2 row parameters'
       end
-      { # Attempt at credstash-compatible storage, setting ParameterName
-        # as well as name attributes
-        ParameterName: params[:key], name: params[:key],
+      # Attempt at credstash-compatible storage, setting ParameterName
+      # as well as name attributes
+      { ParameterName: params[:key], name: params[:key],
         version: params[:version],
         # Base64 encode then force into UTF-8 for safety in DDB
         key: b64_utf8_encode(params[:encryption_key]),
         contents: b64_utf8_encode(params[:value]),
-        hmac: params[:hmac], keystore_format: params[:keystore_format]
-      }
+        hmac: params[:hmac], keystore_format: params[:keystore_format] }
     end
 
     def generate_v2_keys(kms_key_id)
@@ -77,7 +76,8 @@ class Keystore
       data_key, hmac_key, wrapped_key = generate_v2_keys(key_id)
       ciphertext = encrypt_aes256(data_key: data_key, plaintext: plaintext)
       # Calculate HMAC for ciphertext with hmac_key
-      b64_hmac = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), hmac_key,
+      b64_hmac = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'),
+                                         hmac_key,
                                          ciphertext)
       [ciphertext, wrapped_key, b64_hmac]
     end
