@@ -74,7 +74,7 @@ class Keystore
 
     def parse_arguments
       subcommands = {
-        'store' => OptionParse.new do |opts|
+        'store' => OptionParser.new do |opts|
           opts.banner = "Usage: #{$PROGRAM_NAME} store [options]"
           opts.on('-v', '--value=VALUE',
                   'Value to store in keystore') do |v|
