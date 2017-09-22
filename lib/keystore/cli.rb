@@ -65,7 +65,7 @@ class Keystore
 
           use --help with either command for more information.
         USAGE
-        opts.separator usage.gub(/^          /, '')
+        opts.separator usage.gsub(/^          /, '')
       end
     end
     # rubocop:enable Metrics/MethodLength
