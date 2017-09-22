@@ -2,6 +2,3 @@ AllCops:
   Exclude:
     # The gemspec file is an exception, it breaks all the rules
     - '*.gemspec'
-# stopitgetsomehelp.gif
-Metrics/LineLength:
-  Max: 100
