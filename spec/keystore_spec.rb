@@ -26,7 +26,7 @@ class KMSResult
   end
 end
 
-RSpec.describe 'Keystore' do
+describe 'Keystore' do
   context 'it can store encrypted values' do
     it 'will call DynamoDB to store the value' do
       mock_ddb = double('AWS::DynamoDB::Client')
