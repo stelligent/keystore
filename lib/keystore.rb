@@ -25,8 +25,9 @@ class Keystore
     @options[:key_alias] ||= 'keystore' unless @options[:key_id]
   end
 
-  def put_v1(key:,
-             value: ' ')
+  def put_v1(key:, value:)
+    # V1 encryption cannot handle empty strings without a special char
+    value = "\0" if value.empty?
     key_id = @options[:key_id] || get_kms_keyid(@options[:key_alias])
     encrypted_value = @options[:kms]
                       .encrypt(key_id: key_id,
