@@ -3,7 +3,7 @@ begin
   require 'aws-sdk-dynamodb'
   require 'aws-sdk-kms'
 rescue LoadError
-  puts 'Unable to load sdk v3 libs'
+  nil
 end
 require 'base64'
 
