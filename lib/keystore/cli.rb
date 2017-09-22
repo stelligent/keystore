@@ -19,9 +19,9 @@ class Keystore
     def init_clients
       @dynamo = Aws::DynamoDB::Client.new region: @opts[:region]
       @kms = Aws::KMS::Client.new region: @opts[:region]
-      @keystore = Keystore.new dynamo: dynamo,
+      @keystore = Keystore.new dynamo: @dynamo,
                                table_name: @opts[:table],
-                               kms: kms,
+                               kms: @kms,
                                key_id: @opts[:kmsid],
                                key_alias: @opts[:kmsalias]
     end
