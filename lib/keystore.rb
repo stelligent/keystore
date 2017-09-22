@@ -43,7 +43,7 @@ class Keystore
     [keystring[0..31], keystring[32..-1]]
   end
 
-  def encrypt_aes256(data_key: , plaintext: nil)
+  def encrypt_aes256(data_key:, plaintext: nil)
     # Setup the AES-256-CTR cipher object with the data key provided
     # by KMS, and a random IV
     cipher = OpenSSL::Cipher.new('AES-256-CTR')
@@ -74,7 +74,8 @@ class Keystore
       # Base64 encode then force into UTF-8 for safety in DDB
       key: b64_utf8_encode(params[:encryption_key]),
       contents: b64_utf8_encode(params[:value]),
-      hmac: params[:hmac], keystore_format: params[:keystore_format] }
+      hmac: params[:hmac], keystore_format: params[:keystore_format]
+    }
   end
 
   def generate_v2_keys(kms_key_id)
