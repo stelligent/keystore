@@ -5,48 +5,53 @@ begin
 rescue LoadError
   nil
 end
-require 'base64'
+require 'keystore/retrieve'
+require 'keystore/store'
 
 # utility to use AWS services to handle encryption and storage of secret data.
 class Keystore
   def initialize(params = {})
-    @options = params
-    fail 'need to specify dynamo parameter' if @options[:dynamo].nil?
-    fail 'need to specify table_name parameter' if @options[:table_name].nil?
-    fail 'need to specify kms parameter' if @options[:kms].nil?
+    @options = {
+      # Default to keystore storage format v1 (raw KMS encrypt of data in DDB,
+      # base64)
+      keystore_format: 'v1',
+      # Default to creating default credential chain KMS and DDB clients in
+      # us-east-1, if not passed dynamo/kms clients to use
+      region: 'us-east-1',
+      # Default to DDB table 'keystore-table'
+      table_name: 'keystore-table'
+    }.merge params
+
+    # Default to KMS alias 'keystore' if not otherwise specified
+    @options[:key_alias] ||= 'keystore' unless @options[:key_id]
   end
 
   def store(params)
-    # only need key id to encrypt, so check for it here
-    fail 'need to specify key_id or key_alias parameter' if @options[:key_id].nil? and @options[:key_alias].nil?
-    key_id = @options[:key_id] || get_kms_keyid(@options[:key_alias])
-
-    value_to_encrypt = params[:value].nil? || params[:value].empty? ? ' ' : params[:value]
-    encrypted_value = @options[:kms].encrypt(key_id: key_id, plaintext: value_to_encrypt).ciphertext_blob
-    encoded_value = Base64.encode64(encrypted_value)
-    @options[:dynamo].put_item(
-      table_name: @options[:table_name],
-      item: { ParameterName: params[:key], Value: encoded_value }
-    )
+    store = Keystore::Store.new(@options)
+    case @options[:keystore_format]
+    when 'v1'
+      # old version, encrypt data directly with KMS
+      store.put_v1(**params)
+    when 'v2'
+      store.put_v2(params[:value])
+    else
+      raise "Unknown keystore format: #{@options[:keystore_format]}"
+    end
   end
 
   def retrieve(params)
-    item = @options[:dynamo].get_item(table_name: @options[:table_name], key: { ParameterName: params[:key] }).item
-    fail KeyNotFoundError.new, "keyname #{params[:key]} not found" if item.nil?
-    fail KeyNotFoundError.new, "keyname #{params[:key]} not found" if item['Value'].nil?
-    encoded_value = item['Value']
-    encrypted_value = Base64.decode64(encoded_value)
-    result = @options[:kms].decrypt(ciphertext_blob: encrypted_value).plaintext
-    result.strip
+    retrieve = Keystore::Retrieve.new(@options)
+    retrieve.get(params)
   end
 
   private
+
   def get_kms_keyid(key_alias)
-    begin
-      @options[:kms].list_aliases.aliases.find { |resp| resp.alias_name == "alias/#{key_alias}" }.target_key_id
-    rescue NoMethodError
-      fail "#{key_alias} is not a valid kms key alias"
-    end
+    @options[:kms].list_aliases.aliases.find do |resp|
+      resp.alias_name == "alias/#{key_alias}"
+    end.target_key_id
+  rescue NoMethodError
+    raise "#{key_alias} is not a valid kms key alias"
   end
 end
 

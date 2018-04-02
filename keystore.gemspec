@@ -4,7 +4,7 @@ spec = Gem::Specification.new do |s|
   s.name          = 'keystore'
   s.executables  << 'keystore.rb'
   s.license       = 'MIT'
-  s.version       = '0.1.7'
+  s.version       = '0.2.0'
   s.author        = [ 'Jonny Sywulak', 'Stelligent' ]
   s.email         = 'jonny@stelligent.com'
   s.homepage      = 'http://www.stelligent.com'
@@ -13,7 +13,10 @@ spec = Gem::Specification.new do |s|
   s.files       = ['lib/keystore.rb']
   s.require_paths << 'lib'
   s.require_paths << 'bin'
-  s.required_ruby_version = '>= 2.0'
+  s.required_ruby_version = '>= 2.2'
   s.add_runtime_dependency('aws-sdk', '~> 2')
-  s.add_runtime_dependency('trollop', '~> 2')
+  s.add_development_dependency('nyan-cat-formatter')
+  s.add_development_dependency('cucumber')
+  s.add_development_dependency('rspec')
+  s.add_development_dependency('rubocop')
 end
