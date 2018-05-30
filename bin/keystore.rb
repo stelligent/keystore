@@ -3,6 +3,12 @@
 require 'keystore'
 require 'aws-sdk-core'
 require 'trollop'
+begin
+  require 'aws-sdk-dynamodb'
+  require 'aws-sdk-kms'
+rescue LoadError
+  nil
+end
 
 SUB_COMMANDS = %w(store retrieve)
 global_opts = Trollop.options do
