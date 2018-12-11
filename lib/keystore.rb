@@ -1,10 +1,5 @@
-require 'aws-sdk-core'
-begin
-  require 'aws-sdk-dynamodb'
-  require 'aws-sdk-kms'
-rescue LoadError
-  nil
-end
+require 'aws-sdk-dynamodb'
+require 'aws-sdk-kms'
 require 'base64'
 
 # utility to use AWS services to handle encryption and storage of secret data.
