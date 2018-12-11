@@ -17,6 +17,7 @@ class KMSResult
   end
 end
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe 'Keystore' do
   context 'it can store encrypted values' do
     it 'will call DynamoDB to store the value' do
@@ -129,7 +130,7 @@ RSpec.describe 'Keystore' do
 
       begin
         keystore.retrieve key: 'doesnotexist'
-        fail 'Keystore did not throw exception on invalid key'
+        raise 'Keystore did not throw exception on invalid key'
       rescue KeyNotFoundError => e
         # expected error
         puts e.message
@@ -137,3 +138,4 @@ RSpec.describe 'Keystore' do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

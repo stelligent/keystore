@@ -12,18 +12,18 @@ end
 
 Given(/^a region to operate in$/) do
   @region = ENV['region']
-  fail if @region.nil?
+  raise if @region.nil?
 end
 
 Given(/^a KMS key id or KMS key alias to use$/) do
   @key_id = ENV['key_id']
   @key_alias = ENV['key_alias']
-  fail if @key_id.nil? and @key_alias.nil?
+  raise if @key_id.nil? && @key_alias.nil?
 end
 
 Given(/^a DynamoDB table to use$/) do
   @table_name = ENV['table_name']
-  fail if @table_name.nil?
+  raise if @table_name.nil?
 end
 
 When(/^I store a value in the keystore$/) do
