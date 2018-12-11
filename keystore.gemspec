@@ -1,6 +1,4 @@
-require 'rake'
-
-spec = Gem::Specification.new do |s|
+Gem::Specification.new do |s|
   s.name          = 'keystore'
   s.executables  << 'keystore.rb'
   s.license       = 'MIT'
