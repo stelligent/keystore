@@ -16,4 +16,4 @@ jobs:
           command: bundle exec rubocop -D
       - run:
           name: Rspec tests
-          command: bundle exec rspec --color --require spec_helper --format NyanCatFormatter spec\
+          command: bundle exec rspec --color --require spec_helper --format NyanCatFormatter spec
