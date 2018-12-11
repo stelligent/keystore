@@ -13,7 +13,7 @@ spec = Gem::Specification.new do |s|
   s.files       = ['lib/keystore.rb']
   s.require_paths << 'lib'
   s.require_paths << 'bin'
-  s.required_ruby_version = '>= 2.2'
+  s.required_ruby_version = '>= 2.5'
   s.add_runtime_dependency('aws-sdk-dynamodb')
   s.add_runtime_dependency('aws-sdk-kms')
   s.add_runtime_dependency('trollop', '~> 2')
